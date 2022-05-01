@@ -100,7 +100,7 @@ class SnakeGame:
         self._update_ui()
         self.clock.tick(SPEED)
         # 6. return game over and score
-        return game_over, self.score
+        return reward, game_over, self.score
 
     def is_collision(self, point=None):
         if point is None:
