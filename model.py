@@ -26,9 +26,9 @@ class Linear_QNet(nn.Module):
 class QTrainer:
     def __init__(self, model, lr, gamma):
         self.lr = lr  # learning rate
-        self.model = model
         self.gamma = gamma
-        self.optimizer = optim.Adam(self.model.parameters(), lr=self.lr)
+        self.model = model
+        self.optimizer = optim.Adam(model.parameters(), lr=self.lr)
         self.criterion = nn.MSELoss()
 
     def train_step(self, state, action, reward, next_state, done):
@@ -54,7 +54,7 @@ class QTrainer:
                 Q_new = reward[idx] + self.gamma * torch.max(
                     self.model(next_state[idx])
                 )
-            target[idx][torch.argmax(action).item()] = Q_new
+            target[idx][torch.argmax(action[idx]).item()] = Q_new
         # 2: Q_new = r + y * max(next_predicted Q value) -> only do this if not done
         # pred.clone()
         # preds[argmax(action)] = Q_new
@@ -62,4 +62,3 @@ class QTrainer:
         loss = self.criterion(target, pred)
         loss.backward()
         self.optimizer.step()
-        return loss.item()

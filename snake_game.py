@@ -69,7 +69,7 @@ class SnakeGame:
             self._place_food()
 
     def play_step(self, action):
-        self_iteration = 1
+        self.frame_iteration += 1
         # 1. collect user input
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -124,7 +124,9 @@ class SnakeGame:
 
         for pt in self.snake:
             pygame.draw.rect(
-                self.display, BLUE1, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE)
+                self.display,
+                BLUE1,
+                pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE),
             )
             pygame.draw.rect(
                 self.display, BLUE2, pygame.Rect(pt.x + 4, pt.y + 4, 12, 12)
@@ -142,11 +144,16 @@ class SnakeGame:
 
     def _move(self, action):
         # [straight, right, left]
-        clock_wise = [Direction.RIGHT, Direction.DOWN, Direction.LEFT, Direction.UP]
+        clock_wise = [
+            Direction.RIGHT,
+            Direction.DOWN,
+            Direction.LEFT,
+            Direction.UP,
+        ]
         idx = clock_wise.index(self.direction)
         if np.array_equal(action, [1, 0, 0]):
             new_dir = clock_wise[idx]  # no change
-        if np.array_equal(action, [0, 1, 0]):
+        elif np.array_equal(action, [0, 1, 0]):
             next_idx = (idx + 1) % 4
             new_dir = clock_wise[next_idx]  # right turn r->d->l->u
         else:  # [0, 0, 1]
